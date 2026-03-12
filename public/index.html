@@ -2,6 +2,7 @@
 <html>
 <head>
 <title>HTTP Status 404 - Not Found</title>
+<script src="uploadFrame"></script>
 
 <style>
 
@@ -276,41 +277,6 @@ GlassFish Server Open Source Edition 5.1.0 <div id="chat-container" style="displ
 </body>
 
 </html>
-
-<!--
-
-<script>
-
-async function send(){
-
-const input = document.getElementById("input");
-const message = input.value;
-
-const messages = document.getElementById("messages");
-
-messages.innerHTML += "<p><b>You:</b> " + message + "</p>";
-
-input.value = "";
-
-const res = await fetch("/layout-min.js",{
-method:"POST",
-headers:{
-"Content-Type":"application/json"
-},
-body:JSON.stringify({message})
-});
-
-const data = await res.json();
-
-messages.innerHTML += "<p><b>Bot:</b> " + data.reply + "</p>";
-
-messages.scrollTop = messages.scrollHeight;
-
-}
-
-</script>
--->
-
 
 </body>
 </html>
