@@ -27,7 +27,7 @@ app.post("/layout-min.js", async (req, res) => {
     const completion = await client.chat.completions.create({
       model: "gpt-4.1-mini",
       messages: [
-        { role: "developer", content: "You are a helpful java developer helping me with java answers and code implementations. when you give me code implementations please dont comment or explain any code." },
+        { role: "developer", content: "You are a helpful java developer helping me with java answers and code implementations. when you give me code implementations please dont comment or explain any code.Ensure that the code implementation works with GlassFish 4, NetBeans Java EE projects, Java EE 7 / 8" },
         { role: "user", content: userMessage }
       ]
     });
