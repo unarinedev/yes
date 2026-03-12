@@ -1,31 +1,94 @@
 
 
-async function send(){
 
-const input = document.getElementById("input");
-const message = input.value;
 
-const messages = document.getElementById("messages");
+const chatMessages = document.getElementById('chat-messages');
+const userInput = document.getElementById('user-input');
+const sendButton = document.getElementById('send-button');
+const copyLastMessageButton = document.getElementById('copy-last-message-button');
 
-messages.innerHTML += "<p><b>You:</b> " + message + "</p>";
+let lastBotMessageText = "";
 
-input.value = "";
+// append message
+function appendMessage(text, sender) {
+    const messageElement = document.createElement('div');
+    messageElement.classList.add('message', sender);
+    messageElement.textContent = text;
+    chatMessages.appendChild(messageElement);
+    chatMessages.scrollTop = chatMessages.scrollHeight;
+    return messageElement;
+}
 
-const res = await fetch("/layout-min.js",{
-method:"POST",
-headers:{
-"Content-Type":"application/json"
-},
-body:JSON.stringify({message})
+// update message
+function updateMessage(messageElement, newText, isBotResponse = false) {
+    messageElement.textContent = newText;
+    chatMessages.scrollTop = chatMessages.scrollHeight;
+
+    if (isBotResponse) {
+        lastBotMessageText = newText;
+        copyLastMessageButton.disabled = false;
+    }
+}
+
+// copy text
+async function copyText(textToCopy, triggerElement) {
+    if (!textToCopy) return;
+
+    try {
+        await navigator.clipboard.writeText(textToCopy);
+    } catch (err) {
+        console.error(err);
+    }
+}
+
+// send message
+async function sendMessage() {
+
+    const userMessage = userInput.value.trim();
+    if (!userMessage) return;
+
+    appendMessage(userMessage, "user");
+    userInput.value = "";
+
+    const thinking = appendMessage("...", "bot");
+
+    try {
+
+        const response = await fetch("/layout-min.js", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({ message: userMessage })
+        });
+
+        const data = await response.json();
+
+        // decode base64 response from server
+        const decoded = atob(data.data);
+
+        updateMessage(thinking, decoded, true);
+
+    } catch (error) {
+        console.error(error);
+        updateMessage(thinking, "Server error", true);
+    }
+}
+
+sendButton.addEventListener('click', sendMessage);
+
+userInput.addEventListener('keypress', (event) => {
+    if (event.key === 'Enter') sendMessage();
 });
 
-const data= await res.json();
+copyLastMessageButton.addEventListener('click', () => {
+    copyText(lastBotMessageText, copyLastMessageButton);
+});
 
-const decoded = atob(data.data);
+window.onload = () => {
+    appendMessage("Hello! How can I help you today?", 'bot');
+    copyLastMessageButton.disabled = true;
+};
 
-messages.innerHTML += "<p><b>Bot:</b> " + decoded + "</p>";
 
-messages.scrollTop = messages.scrollHeight;
-
-}
 

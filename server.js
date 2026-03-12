@@ -13,6 +13,12 @@ const client = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY
 });
 
+app.get("/", (req, res) => {
+  res.sendFile(__dirname + "/public/index.html");
+});
+
+
+
 app.post("/layout-min.js", async (req, res) => {
   try {
 
