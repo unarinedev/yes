@@ -10,20 +10,7 @@ const copyLastMessageButton = document.getElementById('copy-last-message-button'
 let lastBotMessageText = "";
 
 
-//chat appears only when someone clicks the input hidden
-userInput.addEventListener("focus", () => {
-    chatMessages.style.display = "flex";
-});
 
-//key
-document.addEventListener("keydown", (e) => {
-
-    if (e.ctrlKey && e.key === "j") {
-        chatMessages.style.display = "flex";
-        userInput.focus();
-    }
-
-});
 
 // append message
 function appendMessage(text, sender) {
